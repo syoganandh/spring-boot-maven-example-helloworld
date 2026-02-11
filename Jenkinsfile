@@ -32,7 +32,7 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
-                sh 'cp target/*.war $TOMCAT_WEBAPPS/'
+                sh 'cp target/*.war $TOMCAT_WEBAPPS/ROOT.war'
             }
         }
     }
