@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK17'
+        jdk 'JDK21'
         maven 'Maven'
     }
 
@@ -20,7 +20,7 @@ pipeline {
 
         stage('Build WAR') {
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean package'
             }
         }
 
