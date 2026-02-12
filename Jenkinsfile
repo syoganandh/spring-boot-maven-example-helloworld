@@ -7,8 +7,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "springboot-tomcat-app"
-        CONTAINER_NAME = "springboot-container"
+        TOMCAT_WEBAPPS = '/var/lib/tomcat10/webapps'
     }
 
     stages {
@@ -21,25 +20,19 @@ pipeline {
 
         stage('Build WAR') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean install'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Archive Artifact') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                archiveArtifacts artifacts: 'target/*.war'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Deploy to Tomcat') {
             steps {
-                sh 'docker rm -f $CONTAINER_NAME || true'
-            }
-        }
-
-        stage('Run Container') {
-            steps {
-                sh 'docker run -d -p 8082:8080 --name $CONTAINER_NAME $IMAGE_NAME'
+                sh 'cp target/*.war $TOMCAT_WEBAPPS/ROOT.war'
             }
         }
     }
